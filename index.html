@@ -954,138 +954,44 @@
 </div>
 
 <script>
-  // ====== 프롬프트 데이터 (Google Sheets 컬럼 구조 기반) ======
-  // 시트 컬럼: id | code | category | title | description | usage | prompt | tags | published | order | created_at | updated_at
-  const sheetRows = [
-    {
-      id: "26051301",
-      code: "100001",
-      category: "이미지 편집",
-      title: "사진을 지브리 스타일로 변환",
-      description: "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.",
-      usage: `1. 사진을 업로드합니다.
-2. 프롬프트를 복사해서 붙여넣습니다.
-3. 프롬프트 내 피사체 변수를 수정합니다.
-4. 실행합니다.`,
-      prompt: `Transform this photo into...`,
-      tags: "이미지생성, 스타일변환, 지브리",
-      published: "TRUE",
-      order: 1,
-      created_at: "2026-05-13",
-      updated_at: "2026-05-13"
-    },
-    {
-      id: "26051301",
-      code: "100001",
-      category: "이미지 편집",
-      title: "데이터 분석 시뮬레이션",
-      description: "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.",
-      usage: `1. 사진을 업로드합니다.
-2. 프롬프트를 복사해서 붙여넣습니다.
-3. 프롬프트 내 피사체 변수를 수정합니다.
-4. 실행합니다.`,
-      prompt: `Transform this photo into...`,
-      tags: "이미지생성, 스타일변환, 지브리",
-      published: "TRUE",
-      order: 1,
-      created_at: "2026-05-13",
-      updated_at: "2026-05-13"
-    },
-    {
-      id: "26051301",
-      code: "100001",
-      category: "이미지 편집",
-      title: "데이터 리포트",
-      description: "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.",
-      usage: `1. 사진을 업로드합니다.
-2. 프롬프트를 복사해서 붙여넣습니다.
-3. 프롬프트 내 피사체 변수를 수정합니다.
-4. 실행합니다.`,
-      prompt: `Transform this photo into...`,
-      tags: "이미지생성, 스타일변환, 지브리",
-      published: "TRUE",
-      order: 1,
-      created_at: "2026-05-13",
-      updated_at: "2026-05-13"
-    },
-    {
-      id: "26051301",
-      code: "100001",
-      category: "이미지 편집",
-      title: "대시보드 만들기",
-      description: "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.",
-      usage: `1. 사진을 업로드합니다.
-2. 프롬프트를 복사해서 붙여넣습니다.
-3. 프롬프트 내 피사체 변수를 수정합니다.
-4. 실행합니다.`,
-      prompt: `Transform this photo into...`,
-      tags: "이미지생성, 스타일변환, 지브리",
-      published: "TRUE",
-      order: 1,
-      created_at: "2026-05-13",
-      updated_at: "2026-05-13"
-    },
-    {
-      id: "26051301",
-      code: "100001",
-      category: "이미지 편집",
-      title: "UX 레퍼런스 리서치",
-      description: "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.",
-      usage: `1. 사진을 업로드합니다.
-2. 프롬프트를 복사해서 붙여넣습니다.
-3. 프롬프트 내 피사체 변수를 수정합니다.
-4. 실행합니다.`,
-      prompt: `Transform this photo into...`,
-      tags: "이미지생성, 스타일변환, 지브리",
-      published: "TRUE",
-      order: 1,
-      created_at: "2026-05-13",
-      updated_at: "2026-05-13"
-    },
-    {
-      id: "26051301",
-      code: "100001",
-      category: "이미지 편집",
-      title: "리서치 전문 프롬프트",
-      description: "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.",
-      usage: `1. 사진을 업로드합니다.
-2. 프롬프트를 복사해서 붙여넣습니다.
-3. 프롬프트 내 피사체 변수를 수정합니다.
-4. 실행합니다.`,
-      prompt: `Transform this photo into...`,
-      tags: "이미지생성, 스타일변환, 지브리",
-      published: "TRUE",
-      order: 1,
-      created_at: "2026-05-13",
-      updated_at: "2026-05-13"
-    }
-  ];
+  // ====== 프롬프트 데이터 (prompts.json 파일에서 로드) ======
+  // 같은 폴더의 prompts.json 파일을 읽어와서 카드로 표시합니다.
+  // 콘텐츠를 추가/수정하려면 prompts.json 파일만 수정해서 GitHub에 올리면 됩니다.
+  let prompts = [];
   
-  // 시트 행 → 사이트용 객체 변환
-  // - published === "TRUE"인 것만 노출
-  // - order 오름차순 정렬
-  // - 중복 id가 있을 경우 자동으로 변별 (URL 해시 라우팅 충돌 방지)
-  const idCount = {};
-  const prompts = sheetRows
-    .filter(r => r.published === "TRUE" || r.published === true)
-    .sort((a, b) => (a.order || 999) - (b.order || 999))
-    .map(r => {
-      // 동일 id 중복 시 -2, -3 ... 형태로 suffix 부여
-      const baseId = r.id;
-      idCount[baseId] = (idCount[baseId] || 0) + 1;
-      const uniqueId = idCount[baseId] === 1 ? baseId : `${baseId}-${idCount[baseId]}`;
+  async function loadPrompts() {
+    try {
+      // 캐시 우회를 위해 타임스탬프 쿼리 추가 (수정 시 즉시 반영)
+      const res = await fetch('./prompts.json?t=' + Date.now());
+      if (!res.ok) throw new Error('prompts.json not found');
+      const data = await res.json();
       
-      return {
-        id: uniqueId,
-        code: r.code,
-        category: r.category,
-        title: r.title,
-        description: r.description,
-        usage: r.usage || "",
-        prompt: r.prompt,
-        tags: r.tags ? r.tags.split(",").map(t => t.trim()).filter(Boolean) : []
-      };
-    });
+      const idCount = {};
+      prompts = (data.prompts || [])
+        .filter(r => r.published === "TRUE" || r.published === true)
+        .sort((a, b) => (parseInt(a.order, 10) || 999) - (parseInt(b.order, 10) || 999))
+        .map(r => {
+          // 중복 id 자동 변별 (URL 해시 충돌 방지)
+          const baseId = String(r.id || '').trim() || `auto-${Math.random().toString(36).slice(2, 8)}`;
+          idCount[baseId] = (idCount[baseId] || 0) + 1;
+          const uniqueId = idCount[baseId] === 1 ? baseId : `${baseId}-${idCount[baseId]}`;
+          
+          return {
+            id: uniqueId,
+            code: String(r.code || '').trim(),
+            category: String(r.category || '').trim(),
+            title: String(r.title || '').trim(),
+            description: String(r.description || '').trim(),
+            usage: String(r.usage || ''),
+            prompt: String(r.prompt || ''),
+            tags: r.tags ? String(r.tags).split(',').map(t => t.trim()).filter(Boolean) : []
+          };
+        });
+    } catch (e) {
+      console.error('Failed to load prompts.json:', e);
+      prompts = [];
+    }
+  }
   // ================================================
   
   let currentCategory = "ALL";
@@ -1502,16 +1408,24 @@
     }
   });
   
-  // 초기 렌더링
-  renderCategories();
-  renderCards();
-  
-  if (location.hash) {
-    const id = location.hash.slice(1);
-    if (prompts.find(p => p.id === id)) {
-      openModal(id);
+  // 초기 렌더링 (prompts.json 로드 완료 후)
+  (async function init() {
+    // 로딩 메시지 표시
+    cardList.innerHTML = `<div class="empty-state">불러오는 중...</div>`;
+    
+    await loadPrompts();
+    
+    renderCategories();
+    renderCards();
+    
+    // 해시 라우팅: URL에 #콘텐츠ID가 있으면 해당 상세페이지 자동 오픈
+    if (location.hash) {
+      const id = location.hash.slice(1);
+      if (prompts.find(p => p.id === id)) {
+        openModal(id);
+      }
     }
-  }
+  })();
 </script>
 </body>
 </html>
