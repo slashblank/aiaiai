@@ -1,0 +1,76 @@
+{
+  "prompts": [
+    {
+      "id": "26051301",
+      "code": "100001",
+      "category": "이미지 편집",
+      "title": "사진을 지브리 스타일로 변환",
+      "description": "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.",
+      "usage": "1. 사진을 업로드합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 프롬프트 내 피사체 변수를 수정합니다.\n4. 실행합니다.",
+      "prompt": "Transform this photo into a Studio Ghibli-style illustration.\n- Soft pastel color palette with warm tones\n- Hand-drawn watercolor texture\n- Gentle lighting and dreamy atmosphere\n- Preserve original composition and key features",
+      "tags": "이미지생성, 스타일변환, 지브리",
+      "published": "TRUE",
+      "order": 1
+    },
+    {
+      "id": "26051302",
+      "code": "100002",
+      "category": "분석",
+      "title": "데이터 분석 시뮬레이션",
+      "description": "복잡한 데이터를 시뮬레이션해서 인사이트를 뽑아냅니다.",
+      "usage": "1. 분석할 데이터를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. [데이터] 자리에 본인의 데이터를 입력합니다.\n4. 실행합니다.",
+      "prompt": "여기에 실제 프롬프트 본문을 넣으세요.",
+      "tags": "데이터분석, 시뮬레이션, 인사이트",
+      "published": "TRUE",
+      "order": 2
+    },
+    {
+      "id": "26051303",
+      "code": "100003",
+      "category": "분석",
+      "title": "데이터 리포트",
+      "description": "데이터를 보기 좋은 리포트 형태로 정리합니다.",
+      "usage": "1. 분석 결과 데이터를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
+      "prompt": "여기에 실제 프롬프트 본문을 넣으세요.",
+      "tags": "리포트, 데이터, 정리",
+      "published": "TRUE",
+      "order": 3
+    },
+    {
+      "id": "26051304",
+      "code": "100004",
+      "category": "기획",
+      "title": "대시보드 만들기",
+      "description": "효과적인 대시보드 구조를 설계합니다.",
+      "usage": "1. 대시보드 목적을 정의합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
+      "prompt": "여기에 실제 프롬프트 본문을 넣으세요.",
+      "tags": "대시보드, 기획, UX",
+      "published": "TRUE",
+      "order": 4
+    },
+    {
+      "id": "26051305",
+      "code": "100005",
+      "category": "기획",
+      "title": "UX 레퍼런스 리서치",
+      "description": "UX 레퍼런스를 체계적으로 분석합니다.",
+      "usage": "1. 분석할 레퍼런스를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
+      "prompt": "여기에 실제 프롬프트 본문을 넣으세요.",
+      "tags": "UX, 리서치, 레퍼런스",
+      "published": "TRUE",
+      "order": 5
+    },
+    {
+      "id": "26051306",
+      "code": "100006",
+      "category": "글쓰기",
+      "title": "리서치 전문 프롬프트",
+      "description": "전문가급 리서치 결과를 도출합니다.",
+      "usage": "1. 리서치 주제를 정합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
+      "prompt": "여기에 실제 프롬프트 본문을 넣으세요.",
+      "tags": "리서치, 글쓰기, 전문가",
+      "published": "TRUE",
+      "order": 6
+    }
+  ]
+}
