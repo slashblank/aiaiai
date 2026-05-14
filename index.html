@@ -239,9 +239,10 @@
     display: block;
   }
   
+  /* ===== 카드 썸네일 (2:1 비율) ===== */
   .card-image {
     width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 2 / 1;
     border-radius: 0;
     overflow: hidden;
     position: relative;
@@ -255,9 +256,8 @@
   
   /* Gradient backgrounds for cards without images */
   .gradient-bg {
-    width: 100%;
-    height: 100%;
-    position: relative;
+    position: absolute;
+    inset: 0;
     overflow: hidden;
   }
   
@@ -267,6 +267,13 @@
     inset: 0;
     background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.15) 0%, transparent 50%);
     mix-blend-mode: overlay;
+  }
+  
+  /* 사용자 지정 색상 배경 (thumbnail_color 필드) */
+  .custom-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
   }
   
   .grad-1 { background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%); }
@@ -491,15 +498,16 @@
   
   .modal-hero {
     width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
     flex-shrink: 0;
     overflow: hidden;
+    position: relative;
     transition: aspect-ratio 0.35s cubic-bezier(0.4, 0, 0.2, 1),
                 height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .modal-hero.compact {
-    aspect-ratio: 32 / 10; /* 세로 폭 50% 축소 */
+    aspect-ratio: 32 / 9; /* 세로 폭 50% 축소 */
   }
   
   .modal-hero .gradient-bg {
@@ -996,78 +1004,48 @@
   
   // 샘플 데이터 (prompts.json 로드 실패 시 폴백)
   const SAMPLE_DATA = {
-    prompts: [
+    "prompts": [
       {
-        id: "26051301",
-        code: "100001",
-        category: "이미지 편집",
-        title: "사진을 지브리 스타일로 변환",
-        description: "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.\n인물보다 풍경 사진에서 결과가 더 잘 나옵니다.",
-        usage: "1. 사진을 업로드합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 프롬프트 내 피사체 변수를 수정합니다.\n4. 실행합니다.",
-        prompt: "Transform this photo into a Studio Ghibli-style illustration.\n- Soft pastel color palette with warm tones\n- Hand-drawn watercolor texture\n- Gentle lighting and dreamy atmosphere\n- Preserve original composition and key features",
-        tags: "이미지생성, 스타일변환, 지브리",
-        published: "TRUE",
-        order: 1
+        "id": "26051401",
+        "code": "100000",
+        "category": "이미지 편집",
+        "title": "이미지 속 피사체만 추출 (누끼 작업)",
+        "description": "이미지속 피사체만 깔끔하게 추출합니다.\n포토샵 없이 간편하게 누끼 작업을 할 수 있습니다.",
+        "usage": "1. 사진을 업로드합니다.\n2. 프롬프트를 복사+붙여넣기 합니다.\n3. [대상 피사체] 부분에 추출할 피사체를 입력합니다.\n4. 실행합니다.\n",
+        "prompt": "대상 피사체: (대상 피사체를 입력하세요)\n\n[0. ROLE DEFINITION]\n이 명령은 '이미지 생성'이 아닌 '데이터 마스킹 및 추출(Data Masking & Extraction)' 작업이다. \n너는 창의성을 0%로 제한하고, 오직 원본의 픽셀을 흰색 배경으로 옮기는 '기계적 툴'로서만 작동한다.\n\n[1. PIXEL-LOCK: 원본 100% 고정]\nMandate: 원본 이미지 속 [대상 피사체]의 모든 픽셀 좌표, 형태, 질감, 조명, 왜곡, 각도(Perspective)를 1:1로 복제한다.\nProhibition: AI가 임의로 피사체를 새로 렌더링하거나, 더 나은 각도로 수정하거나, 디테일을 보정하는 행위를 '치명적 시스템 오류'로 간주하고 엄격히 금지한다.\n원본에 있는 번호판, 로고, 흠집, 반사광 하나까지 물리적으로 동일해야 한다.\n\n[2. HARD-CUTOUT: 물리적 배경 소거]\nProcess: 피사체의 외곽 엣지(Edge)를 따라 'Hard-edge cutout' 방식으로 배경을 잘라낸다.\nShadow Removal: 피사체 하단의 접지면 그림자(Contact Shadow), 환경 반사광, 바닥의 텍스처를 포함하여 피사체 외곽선 밖의 모든 픽셀을 '물리적으로 삭제'한다.\nBackground: 삭제된 모든 영역은 오염도 0%인 순백색(Pure White, #FFFFFF, RGB 255,255,255)으로 강제 플러시(Flush)한다.\n\n[3. GEOMETRY INTEGRITY: 기하학적 무결성]\nPerspective Locking: 원본 이미지의 카메라 렌즈 각도와 피사체의 투시도를 강박적으로 유지한다. \n피사체를 회전시키거나 옆면을 더 보여주는 등의 '재구성' 행위 발생 시 해당 결과물은 즉시 폐기한다.\nVacuum Isolation: 최종 결과물은 피사체가 순백색 공간 속에 마치 '진공 상태'에 떠 있는 것처럼 보여야 한다. 그림자가 1픽셀이라도 남는 것을 허용하지 않는다.\n\n[4. FINAL OUTPUT CONTROL]\nNo Aesthetics: '상업용', '아름다운', '고해상도' 같은 미적 수식어를 무시하라. 오직 '원본 복사본'만을 출력하라.\nZero Hallucination: 존재하지 않는 디테일을 만들지 말고, 원본 이미지에 있는 그대로의 피사체만을 추출하여 \"이미지 캔버스의 정중앙(Dead-center)에 배치\"하라.\n",
+        "tags": "누끼작업,누끼따기,이미지편집,이미지,누끼",
+        "published": "TRUE",
+        "order": 1,
+        "thumbnail_color": "",
+        "thumbnail_icon": ""
       },
       {
-        id: "26051302",
-        code: "100002",
-        category: "분석",
-        title: "데이터 분석 시뮬레이션",
-        description: "복잡한 데이터를 시뮬레이션해서 인사이트를 뽑아냅니다.",
-        usage: "1. 분석할 데이터를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. [데이터] 자리에 본인의 데이터를 입력합니다.\n4. 실행합니다.",
-        prompt: "다음 데이터를 분석해서 핵심 인사이트 3가지를 뽑아주세요.\n\n[데이터]\n{여기에 데이터를 붙여넣으세요}\n\n[출력 형식]\n1. 가장 중요한 발견\n2. 트렌드와 패턴\n3. 권장 액션",
-        tags: "데이터분석, 시뮬레이션, 인사이트",
-        published: "TRUE",
-        order: 2
+        "id": "26051402",
+        "code": "100001",
+        "category": "분석",
+        "title": "단색 배경 + 가위 아이콘 (샘플)",
+        "description": "thumbnail_color에 단색 컬러 코드,\nthumbnail_icon에 'scissors'를 입력한 예시입니다.",
+        "usage": "1. 시트의 thumbnail_color 컬럼에 색상 코드를 입력합니다.\n2. thumbnail_icon 컬럼에 사용 가능한 아이콘 키를 입력합니다.\n3. 입력값이 비어있으면 기본 그라데이션 + 카테고리 아이콘이 사용됩니다.",
+        "prompt": "샘플 프롬프트 본문입니다.",
+        "tags": "샘플,데모,컬러지정",
+        "published": "TRUE",
+        "order": 2,
+        "thumbnail_color": "#0a0a0a",
+        "thumbnail_icon": "scissors"
       },
       {
-        id: "26051303",
-        code: "100003",
-        category: "분석",
-        title: "데이터 리포트",
-        description: "데이터를 보기 좋은 리포트 형태로 정리합니다.",
-        usage: "1. 분석 결과 데이터를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
-        prompt: "다음 데이터를 비즈니스 리포트 형식으로 정리해주세요.\n\n## 요약\n## 핵심 수치\n## 시사점\n## 액션 아이템",
-        tags: "리포트, 데이터, 정리",
-        published: "TRUE",
-        order: 3
-      },
-      {
-        id: "26051304",
-        code: "100004",
-        category: "기획",
-        title: "대시보드 만들기",
-        description: "효과적인 대시보드 구조를 설계합니다.",
-        usage: "1. 대시보드 목적을 정의합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
-        prompt: "다음 목적의 대시보드를 설계해주세요.\n\n[목적]\n{여기에 대시보드 목적 입력}\n\n포함할 내용:\n1. 핵심 지표 3-5개\n2. 시각화 차트 유형\n3. 레이아웃 구조\n4. 사용자 인터랙션",
-        tags: "대시보드, 기획, UX",
-        published: "TRUE",
-        order: 4
-      },
-      {
-        id: "26051305",
-        code: "100005",
-        category: "기획",
-        title: "UX 레퍼런스 리서치",
-        description: "UX 레퍼런스를 체계적으로 분석합니다.",
-        usage: "1. 분석할 레퍼런스를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
-        prompt: "다음 UX 레퍼런스를 분석해주세요.\n\n[레퍼런스]\n{서비스명 또는 URL}\n\n분석 항목:\n1. 핵심 UX 패턴\n2. 사용자 여정\n3. 강점과 약점\n4. 우리 서비스에 적용할 인사이트",
-        tags: "UX, 리서치, 레퍼런스",
-        published: "TRUE",
-        order: 5
-      },
-      {
-        id: "26051306",
-        code: "100006",
-        category: "글쓰기",
-        title: "리서치 전문 프롬프트",
-        description: "전문가급 리서치 결과를 도출합니다.",
-        usage: "1. 리서치 주제를 정합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
-        prompt: "다음 주제에 대한 전문가 수준의 리서치를 진행해주세요.\n\n[주제]\n{리서치 주제}\n\n출력 형식:\n1. 배경과 맥락\n2. 주요 트렌드\n3. 핵심 플레이어\n4. 시사점과 전망",
-        tags: "리서치, 글쓰기, 전문가",
-        published: "TRUE",
-        order: 6
+        "id": "26051403",
+        "code": "100002",
+        "category": "코딩",
+        "title": "그라데이션 컬러 + 카메라 아이콘 (샘플)",
+        "description": "thumbnail_color에 그라데이션도 입력 가능합니다.",
+        "usage": "thumbnail_color 입력 예시: linear-gradient(135deg, #f43f5e, #8b5cf6)\nthumbnail_icon 입력 예시: camera",
+        "prompt": "샘플 프롬프트 본문입니다.",
+        "tags": "샘플,그라데이션,아이콘",
+        "published": "TRUE",
+        "order": 3,
+        "thumbnail_color": "linear-gradient(135deg, #f43f5e 0%, #8b5cf6 100%)",
+        "thumbnail_icon": "camera"
       }
     ]
   };
@@ -1091,7 +1069,9 @@
           description: String(r.description || '').trim(),
           usage: String(r.usage || ''),
           prompt: String(r.prompt || ''),
-          tags: r.tags ? String(r.tags).split(',').map(t => t.trim()).filter(Boolean) : []
+          tags: r.tags ? String(r.tags).split(',').map(t => t.trim()).filter(Boolean) : [],
+          thumbnail_color: String(r.thumbnail_color || '').trim(),
+          thumbnail_icon: String(r.thumbnail_icon || '').trim()
         };
       });
   }
@@ -1151,19 +1131,72 @@
     return `grad-${(index % 8) + 1}`;
   }
   
-  // 카테고리별 SVG 아이콘 매핑 (흰색 라인 아이콘, Lucide 스타일)
-  function getCategoryIcon(category) {
-    const map = {
-      "이미지 편집": `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`,
-      "분석": `<svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-7"/></svg>`,
-      "글쓰기": `<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
-      "코딩": `<svg viewBox="0 0 24 24"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/><path d="m14 4-4 16"/></svg>`,
-      "마케팅": `<svg viewBox="0 0 24 24"><path d="M3 11l18-8v18l-18-8z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>`,
-      "기획": `<svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2v.3h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2Z"/></svg>`,
-      "번역": `<svg viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>`,
-      "요약": `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg>`
-    };
-    return map[category] || `<svg viewBox="0 0 24 24"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.5 8.5 2.2 2.2M5.6 18.4l2.1-2.1m8.5-8.5 2.2-2.2"/></svg>`;
+  // 단일 색상 검증 및 정규화
+  // - #RGB / #RRGGBB / rgb(...) / rgba(...) / linear-gradient(...) 등 CSS color 값 허용
+  // - 빈 문자열이면 null 반환 (그라데이션 폴백 사용)
+  function normalizeColor(value) {
+    if (!value) return null;
+    const v = String(value).trim();
+    if (!v) return null;
+    // 안전한 CSS 값만 허용 (세미콜론, 중괄호 등 차단)
+    if (/[;{}<>]/.test(v)) return null;
+    return v;
+  }
+  
+  // 카드 배경 마크업 생성 (사용자 지정 색상이 있으면 그것 사용, 없으면 그라데이션)
+  function getCardBgHtml(p) {
+    const customColor = normalizeColor(p.thumbnail_color);
+    if (customColor) {
+      return `<div class="custom-bg" style="background: ${customColor}"></div>`;
+    }
+    return `<div class="gradient-bg ${getGradClass(p._idx)}"></div>`;
+  }
+  
+  // 사용 가능한 아이콘 SVG 카탈로그
+  // thumbnail_icon 필드에 키를 입력하면 카테고리와 무관하게 해당 아이콘 사용
+  const ICON_LIBRARY = {
+    "image": `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`,
+    "chart": `<svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-7"/></svg>`,
+    "pencil": `<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
+    "code": `<svg viewBox="0 0 24 24"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/><path d="m14 4-4 16"/></svg>`,
+    "megaphone": `<svg viewBox="0 0 24 24"><path d="M3 11l18-8v18l-18-8z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>`,
+    "bulb": `<svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2v.3h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2Z"/></svg>`,
+    "globe": `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg>`,
+    "document": `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg>`,
+    "star": `<svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9 17 14 19 22 12 18 5 22 7 14 2 9 9 9"/></svg>`,
+    "scissors": `<svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg>`,
+    "camera": `<svg viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`,
+    "magic": `<svg viewBox="0 0 24 24"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>`,
+    "search": `<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>`,
+    "data": `<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>`,
+    "settings": `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`
+  };
+  
+  // 카테고리별 기본 아이콘 매핑 (thumbnail_icon이 비어있을 때 폴백)
+  const CATEGORY_ICON_MAP = {
+    "이미지 편집": "image",
+    "분석": "chart",
+    "글쓰기": "pencil",
+    "코딩": "code",
+    "마케팅": "megaphone",
+    "기획": "bulb",
+    "번역": "globe",
+    "요약": "document"
+  };
+  
+  // 아이콘 SVG 반환
+  // 1순위: thumbnail_icon 필드의 키 (예: "scissors")
+  // 2순위: 카테고리 기반 매핑
+  // 3순위: 기본 star 아이콘
+  function getCategoryIcon(category, iconKey) {
+    if (iconKey && ICON_LIBRARY[iconKey]) {
+      return ICON_LIBRARY[iconKey];
+    }
+    const defaultKey = CATEGORY_ICON_MAP[category];
+    if (defaultKey && ICON_LIBRARY[defaultKey]) {
+      return ICON_LIBRARY[defaultKey];
+    }
+    return ICON_LIBRARY["star"];
   }
   
   // 카테고리 탭 렌더링
@@ -1209,11 +1242,10 @@
     cardList.innerHTML = filtered.map((p, i) => `
       <article class="card" data-id="${escapeHtml(p.id)}">
         <div class="card-image">
-          <div class="gradient-bg ${getGradClass(p._idx)}">
-            <span class="card-icon">${getCategoryIcon(p.category)}</span>
-            <span class="card-number">${escapeHtml(p.code)}</span>
-            <span class="card-category-img">${escapeHtml(p.category)}</span>
-          </div>
+          ${getCardBgHtml(p)}
+          <span class="card-icon">${getCategoryIcon(p.category, p.thumbnail_icon)}</span>
+          <span class="card-number">${escapeHtml(p.code)}</span>
+          <span class="card-category-img">${escapeHtml(p.category)}</span>
         </div>
         <div class="card-meta">
           <span class="card-title">${escapeHtml(p.title)}</span>
@@ -1304,13 +1336,17 @@
       tagsContainer.innerHTML = "";
     }
     
-    // Hero gradient
+    // Hero: 사용자 지정 색상이 있으면 그것, 없으면 그라데이션
+    // p에 _idx가 없을 수 있으니 임시로 idx 사용
+    const heroBgHtml = normalizeColor(p.thumbnail_color)
+      ? `<div class="custom-bg" style="background: ${normalizeColor(p.thumbnail_color)}"></div>`
+      : `<div class="gradient-bg ${getGradClass(idx)}"></div>`;
+    
     modalHero.innerHTML = `
-      <div class="gradient-bg ${getGradClass(idx)}">
-        <span class="card-icon">${getCategoryIcon(p.category)}</span>
-        <span class="card-number">${p.code}</span>
-        <span class="card-category-img">${p.category}</span>
-      </div>
+      ${heroBgHtml}
+      <span class="card-icon">${getCategoryIcon(p.category, p.thumbnail_icon)}</span>
+      <span class="card-number">${escapeHtml(p.code)}</span>
+      <span class="card-category-img">${escapeHtml(p.category)}</span>
     `;
     
     // 모달 열 때 히어로는 항상 풀 사이즈로 시작
