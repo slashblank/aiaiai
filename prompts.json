@@ -10,7 +10,9 @@
       "prompt": "대상 피사체: (대상 피사체를 입력하세요)\n\n[0. ROLE DEFINITION]\n이 명령은 '이미지 생성'이 아닌 '데이터 마스킹 및 추출(Data Masking & Extraction)' 작업이다. \n너는 창의성을 0%로 제한하고, 오직 원본의 픽셀을 흰색 배경으로 옮기는 '기계적 툴'로서만 작동한다.\n\n[1. PIXEL-LOCK: 원본 100% 고정]\nMandate: 원본 이미지 속 [대상 피사체]의 모든 픽셀 좌표, 형태, 질감, 조명, 왜곡, 각도(Perspective)를 1:1로 복제한다.\nProhibition: AI가 임의로 피사체를 새로 렌더링하거나, 더 나은 각도로 수정하거나, 디테일을 보정하는 행위를 '치명적 시스템 오류'로 간주하고 엄격히 금지한다.\n원본에 있는 번호판, 로고, 흠집, 반사광 하나까지 물리적으로 동일해야 한다.\n\n[2. HARD-CUTOUT: 물리적 배경 소거]\nProcess: 피사체의 외곽 엣지(Edge)를 따라 'Hard-edge cutout' 방식으로 배경을 잘라낸다.\nShadow Removal: 피사체 하단의 접지면 그림자(Contact Shadow), 환경 반사광, 바닥의 텍스처를 포함하여 피사체 외곽선 밖의 모든 픽셀을 '물리적으로 삭제'한다.\nBackground: 삭제된 모든 영역은 오염도 0%인 순백색(Pure White, #FFFFFF, RGB 255,255,255)으로 강제 플러시(Flush)한다.\n\n[3. GEOMETRY INTEGRITY: 기하학적 무결성]\nPerspective Locking: 원본 이미지의 카메라 렌즈 각도와 피사체의 투시도를 강박적으로 유지한다. \n피사체를 회전시키거나 옆면을 더 보여주는 등의 '재구성' 행위 발생 시 해당 결과물은 즉시 폐기한다.\nVacuum Isolation: 최종 결과물은 피사체가 순백색 공간 속에 마치 '진공 상태'에 떠 있는 것처럼 보여야 한다. 그림자가 1픽셀이라도 남는 것을 허용하지 않는다.\n\n[4. FINAL OUTPUT CONTROL]\nNo Aesthetics: '상업용', '아름다운', '고해상도' 같은 미적 수식어를 무시하라. 오직 '원본 복사본'만을 출력하라.\nZero Hallucination: 존재하지 않는 디테일을 만들지 말고, 원본 이미지에 있는 그대로의 피사체만을 추출하여 “이미지 캔버스의 정중앙(Dead-center)에 배치”하라.\n",
       "tags": "누끼작업,누끼따기,이미지편집,이미지,누끼",
       "published": "TRUE",
-      "order": 1
+      "order": 1,
+      "thumbnail_color": "orange-rose",
+      "thumbnail_icon": "image"
     }
   ]
 }
