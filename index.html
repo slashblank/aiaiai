@@ -360,6 +360,7 @@
     line-height: 1.5;
     letter-spacing: -0.03em;
     font-style: italic;
+    white-space: pre-wrap;
   }
   
   .empty-state {
@@ -1044,6 +1045,17 @@
   const shareBtn = document.getElementById("shareBtn");
   const toast = document.getElementById("toast");
   
+  // HTML 특수문자 이스케이프 (XSS 방지 + 줄바꿈 안전 처리)
+  function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+  
   // 인덱스 기반으로 그라데이션 배경 클래스 할당 (8개 순환)
   function getGradClass(index) {
     return `grad-${(index % 8) + 1}`;
@@ -1105,18 +1117,18 @@
     }
     
     cardList.innerHTML = filtered.map((p, i) => `
-      <article class="card" data-id="${p.id}">
+      <article class="card" data-id="${escapeHtml(p.id)}">
         <div class="card-image">
           <div class="gradient-bg ${getGradClass(p._idx)}">
             <span class="card-icon">${getCategoryIcon(p.category)}</span>
-            <span class="card-number">${p.code}</span>
-            <span class="card-category-img">${p.category}</span>
+            <span class="card-number">${escapeHtml(p.code)}</span>
+            <span class="card-category-img">${escapeHtml(p.category)}</span>
           </div>
         </div>
         <div class="card-meta">
-          <span class="card-title">${p.title}</span>
+          <span class="card-title">${escapeHtml(p.title)}</span>
         </div>
-        <div class="card-desc">${p.description}</div>
+        <div class="card-desc">${escapeHtml(p.description)}</div>
       </article>
     `).join("");
     
