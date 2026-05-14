@@ -254,7 +254,7 @@
     opacity: 0.85;
   }
   
-  /* Gradient backgrounds for cards without images */
+  /* Gradient backgrounds */
   .gradient-bg {
     position: absolute;
     inset: 0;
@@ -269,7 +269,6 @@
     mix-blend-mode: overlay;
   }
   
-  /* 사용자 지정 색상 배경 (thumbnail_color 필드) */
   .custom-bg {
     position: absolute;
     inset: 0;
@@ -415,7 +414,7 @@
     width: 100%;
     max-width: 480px;
     height: 100vh;
-    height: 100dvh; /* iOS Safari 주소창 대응: 동적 viewport height */
+    height: 100dvh;
     max-height: none;
     border-radius: 0;
     display: flex;
@@ -442,6 +441,14 @@
   @keyframes slideUp {
     from { transform: translateY(100%); }
     to { transform: translateY(0); }
+  }
+  
+  .modal-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin: 10px auto 4px;
   }
   
   .modal-top-bar {
@@ -507,7 +514,7 @@
   }
   
   .modal-hero.compact {
-    aspect-ratio: 32 / 9; /* 세로 폭 50% 축소 */
+    aspect-ratio: 32 / 9;
   }
   
   .modal-hero .gradient-bg {
@@ -522,7 +529,6 @@
     transition: padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  /* 컴팩트 상태일 때 본문 하단에 여백을 추가해서 스크롤 영역 확보 */
   .modal-body.compact-padding {
     padding-bottom: 120px;
   }
@@ -556,6 +562,7 @@
     margin-bottom: 28px;
     font-style: italic;
     letter-spacing: -0.01em;
+    white-space: pre-wrap;
   }
   
   .modal-section {
@@ -644,8 +651,9 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
+    position: relative;
   }
   
   .btn-primary {
@@ -682,7 +690,35 @@
     background: #f0f0f0;
   }
   
-  /* Floating Action Bar (검색 + TOP) */
+  /* ===== Copy 버튼 클릭 효과 ===== */
+  /* (제거됨) */
+  
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--text);
+    color: var(--bg);
+    padding: 12px 22px;
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  
+  /* Floating Action Bar */
   .floating-bar {
     position: fixed;
     bottom: 24px;
@@ -776,7 +812,6 @@
     background: #0000ff;
   }
   
-  /* Top Button */
   .top-btn {
     flex-shrink: 0;
     width: 44px;
@@ -813,28 +848,190 @@
     stroke-linejoin: miter;
   }
   
-  /* Toast */
-  .toast {
+  /* 단독 메뉴 버튼 (스크롤 안내려갔을 때 우측 하단에 단독 노출) */
+  .menu-btn-standalone {
     position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--text);
-    color: var(--bg);
-    padding: 12px 22px;
+    bottom: 24px;
+    right: calc(max(0px, (100vw - 480px) / 2) + 20px);
+    width: 44px;
+    height: 44px;
+    background: #0a0a0a;
+    color: #ffffff;
+    border: none;
     border-radius: 0;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    z-index: 200;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease,
+                opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+  }
+  
+  .menu-btn-standalone.hidden {
     opacity: 0;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
   }
   
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
+  .menu-btn-standalone:hover {
+    background: #0000ff;
+    box-shadow: 0 6px 20px rgba(0, 0, 255, 0.35);
+  }
+  
+  .menu-btn-standalone:active {
+    transform: scale(0.92);
+  }
+  
+  .menu-btn-standalone svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+  
+  /* 메뉴 버튼 (TOP 버튼과 동일한 크기) */
+  .menu-btn-floating {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    background: #0a0a0a;
+    color: #ffffff;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .menu-btn-floating:hover {
+    background: #0000ff;
+    box-shadow: 0 6px 20px rgba(0, 0, 255, 0.35);
+  }
+  
+  .menu-btn-floating:active {
+    transform: scale(0.92);
+  }
+  
+  .menu-btn-floating svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+  
+  /* 메뉴 말풍선 (메뉴 버튼 위쪽에 위치 — 우측에서 64px 떨어진 곳 = 메뉴 버튼 위치) */
+  .menu-popover {
+    position: fixed;
+    bottom: 80px;
+    right: calc(max(0px, (100vw - 480px) / 2) + 20px + 52px);
+    background: #ffffff;
+    border: 1.5px solid var(--text);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 70;
+    min-width: 200px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .menu-popover.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  
+  /* 말풍선 꼬리 (메뉴 버튼 위쪽 정렬) */
+  .menu-popover-arrow {
+    position: absolute;
+    bottom: -8px;
+    right: 14px;
+    width: 14px;
+    height: 14px;
+    background: #ffffff;
+    border-right: 1.5px solid var(--text);
+    border-bottom: 1.5px solid var(--text);
+    transform: rotate(45deg);
+  }
+  
+  /* 스크롤 안 내려갔을 때(단독 메뉴 상태): 말풍선 우측에 다시 정렬 */
+  .menu-popover.standalone-anchor {
+    right: calc(max(0px, (100vw - 480px) / 2) + 20px);
+  }
+  
+  .menu-popover-item {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: left;
+    letter-spacing: -0.01em;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .menu-popover-item:last-child {
+    border-bottom: none;
+  }
+  
+  .menu-popover-item:hover {
+    background: #0000ff;
+    color: #ffffff;
+  }
+  
+  /* 페이지 준비중 상태 (URL이 없을 때 클릭 시) */
+  .menu-popover-item.unavailable {
+    background: #0000ff;
+    color: #ffffff;
+    pointer-events: none;
+  }
+  
+  .menu-popover-item.unavailable .menu-popover-label::after {
+    content: " — 페이지 준비중";
+    font-weight: 600;
+    font-size: 11px;
+    opacity: 0.85;
+    letter-spacing: -0.01em;
+  }
+  
+  .menu-popover-item.unavailable .menu-popover-arrow-icon {
+    display: none;
+  }
+  
+  .menu-popover-label {
+    flex: 1;
+  }
+  
+  .menu-popover-arrow-icon {
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 0.6;
+  }
+  
+  .menu-popover-item:hover .menu-popover-arrow-icon {
     opacity: 1;
   }
   
@@ -934,15 +1131,6 @@
 
 </div>
 
-<!-- Side Menu -->
-<div class="side-menu" id="sideMenu">
-  <div class="side-menu-header">
-    <div class="logo">PROMPTS<sup>™</sup></div>
-    <button class="menu-btn" id="menuClose">CLOSE</button>
-  </div>
-  <div class="side-menu-list" id="sideMenuList"></div>
-</div>
-
 <!-- Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
@@ -990,19 +1178,37 @@
     <input type="text" id="floatingSearchInput" placeholder="검색어를 입력하세요.">
     <button class="floating-search-clear" id="floatingSearchClear" aria-label="검색어 지우기" type="button">✕</button>
   </div>
+  <button class="menu-btn-floating" id="menuBtnFloating" aria-label="메뉴">
+    <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
   <button class="top-btn" id="topBtn" aria-label="맨 위로">
     <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
   </button>
 </div>
 
+<!-- 스크롤 안내려갔을 때 표시되는 단독 메뉴 버튼 -->
+<button class="menu-btn-standalone" id="menuBtnStandalone" aria-label="메뉴">
+  <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+</button>
+
+<!-- 메뉴 말풍선 -->
+<div class="menu-popover" id="menuPopover">
+  <div class="menu-popover-arrow"></div>
+  <button class="menu-popover-item" id="menuAbout">
+    <span class="menu-popover-label">페이지 소개</span>
+    <span class="menu-popover-arrow-icon">→</span>
+  </button>
+  <button class="menu-popover-item" id="menuTagSearch">
+    <span class="menu-popover-label">태그로 검색</span>
+    <span class="menu-popover-arrow-icon">→</span>
+  </button>
+</div>
+
 <script>
   // ====== 프롬프트 데이터 (prompts.json 파일에서 로드) ======
-  // 같은 폴더의 prompts.json 파일을 읽어와서 카드로 표시합니다.
-  // 콘텐츠를 추가/수정하려면 prompts.json 파일만 수정해서 GitHub에 올리면 됩니다.
-  // JSON 로드 실패 시(개발 환경 등) 아래 SAMPLE_DATA가 폴백으로 사용됩니다.
   let prompts = [];
   
-  // 샘플 데이터 (prompts.json 로드 실패 시 폴백)
+  // 샘플 데이터
   const SAMPLE_DATA = {
     "prompts": [
       {
@@ -1012,7 +1218,7 @@
         "title": "이미지 속 피사체만 추출 (누끼 작업)",
         "description": "이미지속 피사체만 깔끔하게 추출합니다.\n포토샵 없이 간편하게 누끼 작업을 할 수 있습니다.",
         "usage": "1. 사진을 업로드합니다.\n2. 프롬프트를 복사+붙여넣기 합니다.\n3. [대상 피사체] 부분에 추출할 피사체를 입력합니다.\n4. 실행합니다.\n",
-        "prompt": "대상 피사체: (대상 피사체를 입력하세요)\n\n[0. ROLE DEFINITION]\n이 명령은 '이미지 생성'이 아닌 '데이터 마스킹 및 추출(Data Masking & Extraction)' 작업이다. \n너는 창의성을 0%로 제한하고, 오직 원본의 픽셀을 흰색 배경으로 옮기는 '기계적 툴'로서만 작동한다.\n\n[1. PIXEL-LOCK: 원본 100% 고정]\nMandate: 원본 이미지 속 [대상 피사체]의 모든 픽셀 좌표, 형태, 질감, 조명, 왜곡, 각도(Perspective)를 1:1로 복제한다.\nProhibition: AI가 임의로 피사체를 새로 렌더링하거나, 더 나은 각도로 수정하거나, 디테일을 보정하는 행위를 '치명적 시스템 오류'로 간주하고 엄격히 금지한다.\n원본에 있는 번호판, 로고, 흠집, 반사광 하나까지 물리적으로 동일해야 한다.\n\n[2. HARD-CUTOUT: 물리적 배경 소거]\nProcess: 피사체의 외곽 엣지(Edge)를 따라 'Hard-edge cutout' 방식으로 배경을 잘라낸다.\nShadow Removal: 피사체 하단의 접지면 그림자(Contact Shadow), 환경 반사광, 바닥의 텍스처를 포함하여 피사체 외곽선 밖의 모든 픽셀을 '물리적으로 삭제'한다.\nBackground: 삭제된 모든 영역은 오염도 0%인 순백색(Pure White, #FFFFFF, RGB 255,255,255)으로 강제 플러시(Flush)한다.\n\n[3. GEOMETRY INTEGRITY: 기하학적 무결성]\nPerspective Locking: 원본 이미지의 카메라 렌즈 각도와 피사체의 투시도를 강박적으로 유지한다. \n피사체를 회전시키거나 옆면을 더 보여주는 등의 '재구성' 행위 발생 시 해당 결과물은 즉시 폐기한다.\nVacuum Isolation: 최종 결과물은 피사체가 순백색 공간 속에 마치 '진공 상태'에 떠 있는 것처럼 보여야 한다. 그림자가 1픽셀이라도 남는 것을 허용하지 않는다.\n\n[4. FINAL OUTPUT CONTROL]\nNo Aesthetics: '상업용', '아름다운', '고해상도' 같은 미적 수식어를 무시하라. 오직 '원본 복사본'만을 출력하라.\nZero Hallucination: 존재하지 않는 디테일을 만들지 말고, 원본 이미지에 있는 그대로의 피사체만을 추출하여 \"이미지 캔버스의 정중앙(Dead-center)에 배치\"하라.\n",
+        "prompt": "대상 피사체: (대상 피사체를 입력하세요)\n\n[0. ROLE DEFINITION]\n이 명령은 '이미지 생성'이 아닌 '데이터 마스킹 및 추출' 작업이다.\n너는 창의성을 0%로 제한하고, 오직 원본의 픽셀을 흰색 배경으로 옮기는 '기계적 툴'로서만 작동한다.",
         "tags": "누끼작업,누끼따기,이미지편집,이미지,누끼",
         "published": "TRUE",
         "order": 1,
@@ -1050,7 +1256,6 @@
     ]
   };
   
-  // 데이터를 사이트 형식으로 변환
   function transformData(rawData) {
     const idCount = {};
     return (rawData.prompts || [])
@@ -1078,23 +1283,16 @@
   
   async function loadPrompts() {
     try {
-      // 캐시 우회를 위해 타임스탬프 쿼리 추가 (수정 시 즉시 반영)
       const res = await fetch('./prompts.json?t=' + Date.now());
       if (!res.ok) throw new Error('prompts.json not found');
       const data = await res.json();
-      
       const transformed = transformData(data);
-      
-      // JSON이 비어있으면 샘플 데이터 사용
       if (transformed.length === 0) {
-        console.warn('prompts.json is empty, using sample data');
         prompts = transformData(SAMPLE_DATA);
       } else {
         prompts = transformed;
       }
     } catch (e) {
-      // JSON 로드 실패 시 샘플 데이터 폴백
-      console.warn('Failed to load prompts.json, using sample data:', e.message);
       prompts = transformData(SAMPLE_DATA);
     }
   }
@@ -1115,7 +1313,6 @@
   const shareBtn = document.getElementById("shareBtn");
   const toast = document.getElementById("toast");
   
-  // HTML 특수문자 이스케이프 (XSS 방지 + 줄바꿈 안전 처리)
   function escapeHtml(str) {
     if (str == null) return '';
     return String(str)
@@ -1126,24 +1323,18 @@
       .replace(/'/g, '&#039;');
   }
   
-  // 인덱스 기반으로 그라데이션 배경 클래스 할당 (8개 순환)
   function getGradClass(index) {
     return `grad-${(index % 8) + 1}`;
   }
   
-  // 단일 색상 검증 및 정규화
-  // - #RGB / #RRGGBB / rgb(...) / rgba(...) / linear-gradient(...) 등 CSS color 값 허용
-  // - 빈 문자열이면 null 반환 (그라데이션 폴백 사용)
   function normalizeColor(value) {
     if (!value) return null;
     const v = String(value).trim();
     if (!v) return null;
-    // 안전한 CSS 값만 허용 (세미콜론, 중괄호 등 차단)
     if (/[;{}<>]/.test(v)) return null;
     return v;
   }
   
-  // 카드 배경 마크업 생성 (사용자 지정 색상이 있으면 그것 사용, 없으면 그라데이션)
   function getCardBgHtml(p) {
     const customColor = normalizeColor(p.thumbnail_color);
     if (customColor) {
@@ -1152,8 +1343,6 @@
     return `<div class="gradient-bg ${getGradClass(p._idx)}"></div>`;
   }
   
-  // 사용 가능한 아이콘 SVG 카탈로그
-  // thumbnail_icon 필드에 키를 입력하면 카테고리와 무관하게 해당 아이콘 사용
   const ICON_LIBRARY = {
     "image": `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`,
     "chart": `<svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-7"/></svg>`,
@@ -1172,7 +1361,6 @@
     "settings": `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`
   };
   
-  // 카테고리별 기본 아이콘 매핑 (thumbnail_icon이 비어있을 때 폴백)
   const CATEGORY_ICON_MAP = {
     "이미지 편집": "image",
     "분석": "chart",
@@ -1184,10 +1372,6 @@
     "요약": "document"
   };
   
-  // 아이콘 SVG 반환
-  // 1순위: thumbnail_icon 필드의 키 (예: "scissors")
-  // 2순위: 카테고리 기반 매핑
-  // 3순위: 기본 star 아이콘
   function getCategoryIcon(category, iconKey) {
     if (iconKey && ICON_LIBRARY[iconKey]) {
       return ICON_LIBRARY[iconKey];
@@ -1199,11 +1383,10 @@
     return ICON_LIBRARY["star"];
   }
   
-  // 카테고리 탭 렌더링
   function renderCategories() {
     const categories = ["ALL", ...new Set(prompts.map(p => p.category))];
     categoryTabs.innerHTML = categories.map(cat => 
-      `<button class="tab ${cat === currentCategory ? 'active' : ''}" data-category="${cat}">${cat}</button>`
+      `<button class="tab ${cat === currentCategory ? 'active' : ''}" data-category="${escapeHtml(cat)}">${escapeHtml(cat)}</button>`
     ).join("");
     
     categoryTabs.querySelectorAll(".tab").forEach(tab => {
@@ -1215,7 +1398,6 @@
     });
   }
   
-  // 카드 리스트 렌더링
   function renderCards() {
     let filtered = prompts.map((p, idx) => ({ ...p, _idx: idx }));
     
@@ -1259,44 +1441,6 @@
     });
   }
   
-  // 사이드 메뉴 렌더링
-  function renderSideMenu() {
-    const sideMenuList = document.getElementById("sideMenuList");
-    if (!sideMenuList) return;
-    
-    const categories = ["ALL", ...new Set(prompts.map(p => p.category))];
-    sideMenuList.innerHTML = `
-      <button class="side-menu-item" data-action="top">HOME</button>
-      <div class="side-menu-divider"></div>
-      ${categories.map(cat => 
-        `<button class="side-menu-item category ${cat === currentCategory ? 'active' : ''}" data-category="${cat}">${cat}</button>`
-      ).join("")}
-    `;
-    
-    sideMenuList.querySelectorAll("[data-category]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        currentCategory = btn.dataset.category;
-        renderCategories();
-        renderCards();
-        renderSideMenu();
-        closeMenu();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    });
-    
-    sideMenuList.querySelector('[data-action="top"]')?.addEventListener("click", () => {
-      currentCategory = "ALL";
-      renderCategories();
-      renderCards();
-      renderSideMenu();
-      closeMenu();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-  
-  // 모달 본문 스크롤에 따라 히어로 축소/복원
-  // - 5px 이상 내리면 히어로 50% 축소 + 본문 하단 패딩 추가(스크롤 영역 확보)
-  // - 사용자가 맨 위(0)까지 다시 올리면 풀 사이즈 복원
   function handleModalScroll() {
     const modalBody = document.querySelector(".modal-body");
     if (!modalBody) return;
@@ -1305,39 +1449,32 @@
     const isCompact = modalHero.classList.contains("compact");
     
     if (!isCompact && top > 5) {
-      // 컴팩트 전환: 히어로 축소 + 본문 하단 여백 추가
       modalHero.classList.add("compact");
       modalBody.classList.add("compact-padding");
     } else if (isCompact && top <= 0) {
-      // 풀 사이즈 복원: 사용자가 맨 위까지 올렸을 때만
       modalHero.classList.remove("compact");
       modalBody.classList.remove("compact-padding");
     }
   }
   
-  // 모달 열기
   function openModal(id) {
     const idx = prompts.findIndex(x => x.id === id);
     if (idx === -1) return;
     const p = prompts[idx];
     
-    // 콘텐츠 채우기
     document.getElementById("modalCode").textContent = p.code;
     modalTitle.textContent = p.title;
     modalDesc.textContent = p.description;
     document.getElementById("modalUsage").textContent = p.usage || "";
     modalPrompt.textContent = p.prompt;
     
-    // 태그 렌더링
     const tagsContainer = document.getElementById("modalTags");
     if (p.tags && p.tags.length > 0) {
-      tagsContainer.innerHTML = p.tags.map(t => `<span class="modal-tag">#${t}</span>`).join("");
+      tagsContainer.innerHTML = p.tags.map(t => `<span class="modal-tag">#${escapeHtml(t)}</span>`).join("");
     } else {
       tagsContainer.innerHTML = "";
     }
     
-    // Hero: 사용자 지정 색상이 있으면 그것, 없으면 그라데이션
-    // p에 _idx가 없을 수 있으니 임시로 idx 사용
     const heroBgHtml = normalizeColor(p.thumbnail_color)
       ? `<div class="custom-bg" style="background: ${normalizeColor(p.thumbnail_color)}"></div>`
       : `<div class="gradient-bg ${getGradClass(idx)}"></div>`;
@@ -1349,11 +1486,9 @@
       <span class="card-category-img">${escapeHtml(p.category)}</span>
     `;
     
-    // 모달 열 때 히어로는 항상 풀 사이즈로 시작
     modalHero.classList.remove("compact");
-    modalOverlay.classList.add("active");
     
-    // body에 overflow:hidden만 적용 — 스크롤 위치는 자연히 그대로 유지됨
+    modalOverlay.classList.add("active");
     document.body.classList.add("modal-open");
     
     safeUpdateHash(id);
@@ -1361,7 +1496,6 @@
     copyBtn.dataset.prompt = p.prompt;
     shareBtn.dataset.id = id;
     
-    // 모달 내부는 최상단부터 보이도록 + 스크롤 리스너 연결
     const modalBody = document.querySelector(".modal-body");
     if (modalBody) {
       modalBody.scrollTop = 0;
@@ -1371,16 +1505,7 @@
     }
   }
   
-  // 모달 닫기
-  function closeModal() {
-    modalOverlay.classList.remove("active");
-    document.body.classList.remove("modal-open");
-    safeUpdateHash(null);
-  }
-  
-  // 안전한 URL 해시 업데이트 (스크롤 위치 보존)
   function safeUpdateHash(id) {
-    // 현재 스크롤 위치 기억
     const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
     
     try {
@@ -1389,52 +1514,35 @@
           history.pushState({ id }, "", `#${id}`);
         }
       } else {
-        // 해시 제거 - replaceState로 처리해서 history 오염 방지
         if (location.hash) {
           history.replaceState(null, "", location.pathname + location.search);
         }
       }
     } catch (e) {
-      // pushState/replaceState가 막힌 환경에서의 폴백
-      // 단, location.hash = "" 는 페이지를 최상단으로 점프시키므로 사용 금지
       try {
         if (id) {
           location.hash = id;
         }
-        // else 분기에서는 아무것도 하지 않음 — 해시가 남아있어도 스크롤 점프보다 낫다
       } catch (e2) {}
     }
     
-    // 혹시 브라우저가 스크롤을 옮겼다면 즉시 복원
     if (window.scrollY !== scrollY) {
       window.scrollTo(0, scrollY);
     }
   }
   
-  // 메뉴 열기/닫기
-  function openMenu() {
-    const sideMenu = document.getElementById("sideMenu");
-    if (!sideMenu) return;
-    renderSideMenu();
-    sideMenu.classList.add("active");
-    document.body.style.overflow = "hidden";
+  function closeModal() {
+    modalOverlay.classList.remove("active");
+    document.body.classList.remove("modal-open");
+    safeUpdateHash(null);
   }
   
-  function closeMenu() {
-    const sideMenu = document.getElementById("sideMenu");
-    if (!sideMenu) return;
-    sideMenu.classList.remove("active");
-    document.body.style.overflow = "";
-  }
-  
-  // 토스트
   function showToast(message) {
     toast.textContent = message;
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 2000);
   }
   
-  // 복사
   copyBtn.addEventListener("click", async () => {
     const text = copyBtn.dataset.prompt;
     try {
@@ -1457,7 +1565,6 @@
     }
   });
   
-  // 공유 (URL 복사)
   shareBtn.addEventListener("click", async () => {
     const id = shareBtn.dataset.id;
     const url = `${location.origin}${location.pathname}#${id}`;
@@ -1466,7 +1573,6 @@
       try {
         await navigator.share({ url, title: modalTitle.textContent });
       } catch (e) {
-        // 사용자가 공유 취소한 경우 URL 클립보드 복사로 폴백
         try {
           await navigator.clipboard.writeText(url);
           showToast("✓ URL 복사됨");
@@ -1477,7 +1583,6 @@
         await navigator.clipboard.writeText(url);
         showToast("✓ URL 복사됨");
       } catch (e) {
-        // execCommand 폴백
         const ta = document.createElement("textarea");
         ta.value = url;
         ta.style.position = "fixed";
@@ -1495,14 +1600,11 @@
     }
   });
   
-  // TOP 버튼 + 플로팅 검색바 요소
+  const searchClear = document.getElementById("searchClear");
+  const floatingSearchClear = document.getElementById("floatingSearchClear");
   const topBtn = document.getElementById("topBtn");
   const floatingBar = document.getElementById("floatingBar");
   const floatingSearchInput = document.getElementById("floatingSearchInput");
-  
-  // 검색 클리어 버튼
-  const searchClear = document.getElementById("searchClear");
-  const floatingSearchClear = document.getElementById("floatingSearchClear");
   
   function updateClearButtons(value) {
     if (value && value.length > 0) {
@@ -1532,12 +1634,13 @@
     floatingSearchInput.focus();
   });
   
-  // 플로팅 바 스크롤 표시/숨김
   function updateFloatingBar() {
     if (window.scrollY > 400) {
       floatingBar.classList.add("visible");
+      menuBtnStandalone.classList.add("hidden");
     } else {
       floatingBar.classList.remove("visible");
+      menuBtnStandalone.classList.remove("hidden");
     }
   }
   
@@ -1547,7 +1650,71 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
   
-  // 플로팅 검색창 ↔ 상단 검색창 양방향 동기화
+  // 메뉴 버튼 (말풍선 토글)
+  const menuBtnFloating = document.getElementById("menuBtnFloating");
+  const menuBtnStandalone = document.getElementById("menuBtnStandalone");
+  const menuPopover = document.getElementById("menuPopover");
+  const menuAbout = document.getElementById("menuAbout");
+  const menuTagSearch = document.getElementById("menuTagSearch");
+  
+  function toggleMenu(e) {
+    e.stopPropagation();
+    // 어떤 메뉴 버튼이 눌렸는지에 따라 말풍선 위치 조정
+    if (e.currentTarget === menuBtnStandalone) {
+      // 단독 버튼: 우측 끝(top 버튼 자리)에 위치 → 말풍선도 우측 끝 정렬
+      menuPopover.classList.add("standalone-anchor");
+    } else {
+      // 플로팅 바 내부 메뉴: top 버튼 왼쪽 옆 → 말풍선도 그 위로 정렬
+      menuPopover.classList.remove("standalone-anchor");
+    }
+    menuPopover.classList.toggle("visible");
+  }
+  
+  menuBtnFloating.addEventListener("click", toggleMenu);
+  menuBtnStandalone.addEventListener("click", toggleMenu);
+  
+  // 외부 클릭 시 말풍선 닫기
+  document.addEventListener("click", (e) => {
+    if (!menuPopover.contains(e.target) 
+        && e.target !== menuBtnFloating 
+        && !menuBtnFloating.contains(e.target)
+        && e.target !== menuBtnStandalone
+        && !menuBtnStandalone.contains(e.target)) {
+      menuPopover.classList.remove("visible");
+    }
+  });
+  
+  // 메뉴 항목별 URL 설정 (빈 문자열이면 "페이지 준비중" 표시)
+  const MENU_URLS = {
+    about: "",       // 페이지 소개 URL — 준비되면 입력
+    tagSearch: ""    // 태그로 검색 URL — 준비되면 입력
+  };
+  
+  // URL이 있으면 이동, 없으면 "페이지 준비중" 효과 표시
+  function handleMenuItemClick(itemEl, url) {
+    if (url && url.trim()) {
+      menuPopover.classList.remove("visible");
+      window.location.href = url;
+      return;
+    }
+    
+    // URL 없음 → 파란 배경 + "페이지 준비중" 텍스트 표시
+    itemEl.classList.add("unavailable");
+    setTimeout(() => {
+      itemEl.classList.remove("unavailable");
+    }, 1500);
+  }
+  
+  menuAbout.addEventListener("click", (e) => {
+    e.stopPropagation();
+    handleMenuItemClick(menuAbout, MENU_URLS.about);
+  });
+  
+  menuTagSearch.addEventListener("click", (e) => {
+    e.stopPropagation();
+    handleMenuItemClick(menuTagSearch, MENU_URLS.tagSearch);
+  });
+  
   floatingSearchInput.addEventListener("input", (e) => {
     currentSearch = e.target.value;
     searchInput.value = e.target.value;
@@ -1555,14 +1722,8 @@
     renderCards();
   });
   
-  // 모달 닫기
   document.getElementById("modalCloseTriangle").addEventListener("click", closeModal);
-  // 풀스크린 모달이므로 배경 클릭 닫기 비활성화 — 명시적으로 버튼을 눌러야 닫힘
-  // modalOverlay.addEventListener("click", (e) => {
-  //   if (e.target === modalOverlay) closeModal();
-  // });
   
-  // 검색
   searchInput.addEventListener("input", (e) => {
     currentSearch = e.target.value;
     floatingSearchInput.value = e.target.value;
@@ -1570,28 +1731,22 @@
     renderCards();
   });
   
-  // 뒤로가기
   window.addEventListener("popstate", () => {
     const hash = location.hash.slice(1);
     if (hash) {
       openModal(hash);
     } else {
       modalOverlay.classList.remove("active");
-      document.body.style.overflow = "";
+      document.body.classList.remove("modal-open");
     }
   });
   
-  // 초기 렌더링 (prompts.json 로드 완료 후)
   (async function init() {
-    // 로딩 메시지 표시
     cardList.innerHTML = `<div class="empty-state">불러오는 중...</div>`;
-    
     await loadPrompts();
-    
     renderCategories();
     renderCards();
     
-    // 해시 라우팅: URL에 #콘텐츠ID가 있으면 해당 상세페이지 자동 오픈
     if (location.hash) {
       const id = location.hash.slice(1);
       if (prompts.find(p => p.id === id)) {
