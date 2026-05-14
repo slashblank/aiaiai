@@ -440,7 +440,7 @@
   .modal-top-bar {
     padding: 14px 20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
@@ -475,8 +475,8 @@
   }
   
   .modal-close-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 17px;
+    height: 17px;
     fill: currentColor;
   }
   
@@ -529,7 +529,7 @@
   }
   
   .modal-title {
-    font-size: 26px;
+    font-size: 23px;
     font-weight: 900;
     color: var(--text);
     line-height: 1.05;
@@ -939,7 +939,6 @@
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-top-bar">
-      <button class="modal-back" id="modalClose">← BACK TO LIST</button>
       <button class="modal-close-btn" id="modalCloseTriangle" aria-label="닫기">
         <svg viewBox="0 0 24 24"><polygon points="6 9, 18 9, 12 17"/></svg>
       </button>
@@ -992,7 +991,110 @@
   // ====== 프롬프트 데이터 (prompts.json 파일에서 로드) ======
   // 같은 폴더의 prompts.json 파일을 읽어와서 카드로 표시합니다.
   // 콘텐츠를 추가/수정하려면 prompts.json 파일만 수정해서 GitHub에 올리면 됩니다.
+  // JSON 로드 실패 시(개발 환경 등) 아래 SAMPLE_DATA가 폴백으로 사용됩니다.
   let prompts = [];
+  
+  // 샘플 데이터 (prompts.json 로드 실패 시 폴백)
+  const SAMPLE_DATA = {
+    prompts: [
+      {
+        id: "26051301",
+        code: "100001",
+        category: "이미지 편집",
+        title: "사진을 지브리 스타일로 변환",
+        description: "일반 사진을 지브리 스튜디오 느낌의 일러스트로 변환합니다.\n인물보다 풍경 사진에서 결과가 더 잘 나옵니다.",
+        usage: "1. 사진을 업로드합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 프롬프트 내 피사체 변수를 수정합니다.\n4. 실행합니다.",
+        prompt: "Transform this photo into a Studio Ghibli-style illustration.\n- Soft pastel color palette with warm tones\n- Hand-drawn watercolor texture\n- Gentle lighting and dreamy atmosphere\n- Preserve original composition and key features",
+        tags: "이미지생성, 스타일변환, 지브리",
+        published: "TRUE",
+        order: 1
+      },
+      {
+        id: "26051302",
+        code: "100002",
+        category: "분석",
+        title: "데이터 분석 시뮬레이션",
+        description: "복잡한 데이터를 시뮬레이션해서 인사이트를 뽑아냅니다.",
+        usage: "1. 분석할 데이터를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. [데이터] 자리에 본인의 데이터를 입력합니다.\n4. 실행합니다.",
+        prompt: "다음 데이터를 분석해서 핵심 인사이트 3가지를 뽑아주세요.\n\n[데이터]\n{여기에 데이터를 붙여넣으세요}\n\n[출력 형식]\n1. 가장 중요한 발견\n2. 트렌드와 패턴\n3. 권장 액션",
+        tags: "데이터분석, 시뮬레이션, 인사이트",
+        published: "TRUE",
+        order: 2
+      },
+      {
+        id: "26051303",
+        code: "100003",
+        category: "분석",
+        title: "데이터 리포트",
+        description: "데이터를 보기 좋은 리포트 형태로 정리합니다.",
+        usage: "1. 분석 결과 데이터를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
+        prompt: "다음 데이터를 비즈니스 리포트 형식으로 정리해주세요.\n\n## 요약\n## 핵심 수치\n## 시사점\n## 액션 아이템",
+        tags: "리포트, 데이터, 정리",
+        published: "TRUE",
+        order: 3
+      },
+      {
+        id: "26051304",
+        code: "100004",
+        category: "기획",
+        title: "대시보드 만들기",
+        description: "효과적인 대시보드 구조를 설계합니다.",
+        usage: "1. 대시보드 목적을 정의합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
+        prompt: "다음 목적의 대시보드를 설계해주세요.\n\n[목적]\n{여기에 대시보드 목적 입력}\n\n포함할 내용:\n1. 핵심 지표 3-5개\n2. 시각화 차트 유형\n3. 레이아웃 구조\n4. 사용자 인터랙션",
+        tags: "대시보드, 기획, UX",
+        published: "TRUE",
+        order: 4
+      },
+      {
+        id: "26051305",
+        code: "100005",
+        category: "기획",
+        title: "UX 레퍼런스 리서치",
+        description: "UX 레퍼런스를 체계적으로 분석합니다.",
+        usage: "1. 분석할 레퍼런스를 준비합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
+        prompt: "다음 UX 레퍼런스를 분석해주세요.\n\n[레퍼런스]\n{서비스명 또는 URL}\n\n분석 항목:\n1. 핵심 UX 패턴\n2. 사용자 여정\n3. 강점과 약점\n4. 우리 서비스에 적용할 인사이트",
+        tags: "UX, 리서치, 레퍼런스",
+        published: "TRUE",
+        order: 5
+      },
+      {
+        id: "26051306",
+        code: "100006",
+        category: "글쓰기",
+        title: "리서치 전문 프롬프트",
+        description: "전문가급 리서치 결과를 도출합니다.",
+        usage: "1. 리서치 주제를 정합니다.\n2. 프롬프트를 복사해서 붙여넣습니다.\n3. 실행합니다.",
+        prompt: "다음 주제에 대한 전문가 수준의 리서치를 진행해주세요.\n\n[주제]\n{리서치 주제}\n\n출력 형식:\n1. 배경과 맥락\n2. 주요 트렌드\n3. 핵심 플레이어\n4. 시사점과 전망",
+        tags: "리서치, 글쓰기, 전문가",
+        published: "TRUE",
+        order: 6
+      }
+    ]
+  };
+  
+  // 데이터를 사이트 형식으로 변환
+  function transformData(rawData) {
+    const idCount = {};
+    return (rawData.prompts || [])
+      .filter(r => r.published === "TRUE" || r.published === true)
+      .sort((a, b) => (parseInt(a.order, 10) || 999) - (parseInt(b.order, 10) || 999))
+      .map(r => {
+        const baseId = String(r.id || '').trim() || `auto-${Math.random().toString(36).slice(2, 8)}`;
+        idCount[baseId] = (idCount[baseId] || 0) + 1;
+        const uniqueId = idCount[baseId] === 1 ? baseId : `${baseId}-${idCount[baseId]}`;
+        
+        return {
+          id: uniqueId,
+          code: String(r.code || '').trim(),
+          category: String(r.category || '').trim(),
+          title: String(r.title || '').trim(),
+          description: String(r.description || '').trim(),
+          usage: String(r.usage || ''),
+          prompt: String(r.prompt || ''),
+          tags: r.tags ? String(r.tags).split(',').map(t => t.trim()).filter(Boolean) : []
+        };
+      });
+  }
   
   async function loadPrompts() {
     try {
@@ -1001,30 +1103,19 @@
       if (!res.ok) throw new Error('prompts.json not found');
       const data = await res.json();
       
-      const idCount = {};
-      prompts = (data.prompts || [])
-        .filter(r => r.published === "TRUE" || r.published === true)
-        .sort((a, b) => (parseInt(a.order, 10) || 999) - (parseInt(b.order, 10) || 999))
-        .map(r => {
-          // 중복 id 자동 변별 (URL 해시 충돌 방지)
-          const baseId = String(r.id || '').trim() || `auto-${Math.random().toString(36).slice(2, 8)}`;
-          idCount[baseId] = (idCount[baseId] || 0) + 1;
-          const uniqueId = idCount[baseId] === 1 ? baseId : `${baseId}-${idCount[baseId]}`;
-          
-          return {
-            id: uniqueId,
-            code: String(r.code || '').trim(),
-            category: String(r.category || '').trim(),
-            title: String(r.title || '').trim(),
-            description: String(r.description || '').trim(),
-            usage: String(r.usage || ''),
-            prompt: String(r.prompt || ''),
-            tags: r.tags ? String(r.tags).split(',').map(t => t.trim()).filter(Boolean) : []
-          };
-        });
+      const transformed = transformData(data);
+      
+      // JSON이 비어있으면 샘플 데이터 사용
+      if (transformed.length === 0) {
+        console.warn('prompts.json is empty, using sample data');
+        prompts = transformData(SAMPLE_DATA);
+      } else {
+        prompts = transformed;
+      }
     } catch (e) {
-      console.error('Failed to load prompts.json:', e);
-      prompts = [];
+      // JSON 로드 실패 시 샘플 데이터 폴백
+      console.warn('Failed to load prompts.json, using sample data:', e.message);
+      prompts = transformData(SAMPLE_DATA);
     }
   }
   // ================================================
@@ -1040,7 +1131,6 @@
   const modalTitle = document.getElementById("modalTitle");
   const modalDesc = document.getElementById("modalDesc");
   const modalPrompt = document.getElementById("modalPrompt");
-  const modalClose = document.getElementById("modalClose");
   const copyBtn = document.getElementById("copyBtn");
   const shareBtn = document.getElementById("shareBtn");
   const toast = document.getElementById("toast");
@@ -1430,7 +1520,6 @@
   });
   
   // 모달 닫기
-  modalClose.addEventListener("click", closeModal);
   document.getElementById("modalCloseTriangle").addEventListener("click", closeModal);
   // 풀스크린 모달이므로 배경 클릭 닫기 비활성화 — 명시적으로 버튼을 눌러야 닫힘
   // modalOverlay.addEventListener("click", (e) => {
