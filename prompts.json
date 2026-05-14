@@ -11,7 +11,7 @@
       "tags": "누끼작업,누끼따기,이미지편집,이미지,누끼",
       "published": "TRUE",
       "order": 1,
-      "thumbnail_color": "orange-rose",
+      "thumbnail_color": "linear-gradient(135deg,#ff006e 0%,#fb5607 100%)",
       "thumbnail_icon": "image"
     }
   ]
