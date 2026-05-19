@@ -402,10 +402,33 @@
   .modal-top-bar {
     padding: 14px 20px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
+    gap: 12px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+  }
+  
+  .modal-top-title {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0;
+    transform: translateY(-2px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+  
+  .modal-top-title.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
   
   .modal-close-btn {
@@ -807,6 +830,7 @@
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-top-bar">
+      <h3 class="modal-top-title" id="modalTopTitle"></h3>
       <button class="modal-close-btn" id="modalCloseTriangle" aria-label="닫기">
         <svg viewBox="0 0 24 24"><polygon points="6 9, 18 9, 12 17"/></svg>
       </button>
@@ -1098,13 +1122,16 @@
     
     const top = modalBody.scrollTop;
     const isCompact = modalHero.classList.contains("compact");
+    const modalTopTitle = document.getElementById("modalTopTitle");
     
     if (!isCompact && top > 5) {
       modalHero.classList.add("compact");
       modalBody.classList.add("compact-padding");
+      if (modalTopTitle) modalTopTitle.classList.add("visible");
     } else if (isCompact && top <= 0) {
       modalHero.classList.remove("compact");
       modalBody.classList.remove("compact-padding");
+      if (modalTopTitle) modalTopTitle.classList.remove("visible");
     }
   }
   
@@ -1118,6 +1145,12 @@
     modalDesc.textContent = p.description;
     document.getElementById("modalUsage").textContent = p.usage || "";
     modalPrompt.textContent = p.prompt;
+    
+    const modalTopTitle = document.getElementById("modalTopTitle");
+    if (modalTopTitle) {
+      modalTopTitle.textContent = p.title;
+      modalTopTitle.classList.remove("visible");
+    }
     
     const tagsContainer = document.getElementById("modalTags");
     if (p.tags && p.tags.length > 0) {
