@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>PROMPTS — AI Prompt Collection</title>
+<title>dondools — AI Prompt Collection</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
@@ -67,30 +67,10 @@
     letter-spacing: 0;
   }
   
-  .menu-btn {
-    background: none;
-    border: none;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    color: var(--text);
-    padding: 4px 0;
-  }
-  
   /* Hero / Intro */
   .intro {
     padding: 40px 20px 28px;
     border-bottom: 1px solid var(--border);
-  }
-  
-  .intro-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    margin-bottom: 14px;
   }
   
   .intro-title {
@@ -347,19 +327,6 @@
     text-transform: uppercase;
   }
   
-  .card-separator {
-    color: var(--text-muted);
-    font-weight: 400;
-  }
-  
-  .card-category {
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-  
   .card-desc {
     font-size: 14px;
     color: var(--text-muted);
@@ -422,17 +389,6 @@
     animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
-  @media (min-width: 640px) {
-    .modal-overlay { 
-      align-items: stretch; 
-      padding: 0; 
-    }
-    .modal { 
-      height: 100vh;
-      height: 100dvh;
-    }
-  }
-  
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -443,14 +399,6 @@
     to { transform: translateY(0); }
   }
   
-  .modal-handle {
-    width: 40px;
-    height: 4px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 2px;
-    margin: 10px auto 4px;
-  }
-  
   .modal-top-bar {
     padding: 14px 20px;
     display: flex;
@@ -458,18 +406,6 @@
     align-items: center;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
-  }
-  
-  .modal-back {
-    background: none;
-    border: none;
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    color: var(--text);
-    padding: 4px 0;
   }
   
   .modal-close-btn {
@@ -492,15 +428,6 @@
     width: 17px;
     height: 17px;
     fill: currentColor;
-  }
-  
-  .modal-category-top {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--text);
-    font-style: italic;
-    text-transform: uppercase;
   }
   
   .modal-hero {
@@ -690,9 +617,6 @@
     background: #f0f0f0;
   }
   
-  /* ===== Copy 버튼 클릭 효과 ===== */
-  /* (제거됨) */
-  
   /* Toast */
   .toast {
     position: fixed;
@@ -847,264 +771,12 @@
     stroke-linecap: square;
     stroke-linejoin: miter;
   }
-  
-  /* 단독 메뉴 버튼 (스크롤 안내려갔을 때 우측 하단에 단독 노출) */
-  .menu-btn-standalone {
-    position: fixed;
-    bottom: 24px;
-    right: calc(max(0px, (100vw - 480px) / 2) + 20px);
-    width: 44px;
-    height: 44px;
-    background: #0a0a0a;
-    color: #ffffff;
-    border: none;
-    border-radius: 0;
-    cursor: pointer;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 60;
-    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease,
-                opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    opacity: 1;
-  }
-  
-  .menu-btn-standalone.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-  
-  .menu-btn-standalone:hover {
-    background: #0000ff;
-    box-shadow: 0 6px 20px rgba(0, 0, 255, 0.35);
-  }
-  
-  .menu-btn-standalone:active {
-    transform: scale(0.92);
-  }
-  
-  .menu-btn-standalone svg {
-    width: 20px;
-    height: 20px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2.2;
-    stroke-linecap: square;
-    stroke-linejoin: miter;
-  }
-  
-  /* 메뉴 버튼 (TOP 버튼과 동일한 크기) */
-  .menu-btn-floating {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    background: #0a0a0a;
-    color: #ffffff;
-    border: none;
-    border-radius: 0;
-    cursor: pointer;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .menu-btn-floating:hover {
-    background: #0000ff;
-    box-shadow: 0 6px 20px rgba(0, 0, 255, 0.35);
-  }
-  
-  .menu-btn-floating:active {
-    transform: scale(0.92);
-  }
-  
-  .menu-btn-floating svg {
-    width: 20px;
-    height: 20px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2.2;
-    stroke-linecap: square;
-    stroke-linejoin: miter;
-  }
-  
-  /* 메뉴 말풍선 (메뉴 버튼 위쪽에 위치 — 우측에서 64px 떨어진 곳 = 메뉴 버튼 위치) */
-  .menu-popover {
-    position: fixed;
-    bottom: 80px;
-    right: calc(max(0px, (100vw - 480px) / 2) + 20px + 52px);
-    background: #ffffff;
-    border: 1.5px solid var(--text);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    z-index: 70;
-    min-width: 200px;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(8px);
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  
-  .menu-popover.visible {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-  
-  /* 말풍선 꼬리 (메뉴 버튼 위쪽 정렬) */
-  .menu-popover-arrow {
-    position: absolute;
-    bottom: -8px;
-    right: 14px;
-    width: 14px;
-    height: 14px;
-    background: #ffffff;
-    border-right: 1.5px solid var(--text);
-    border-bottom: 1.5px solid var(--text);
-    transform: rotate(45deg);
-  }
-  
-  /* 스크롤 안 내려갔을 때(단독 메뉴 상태): 말풍선 우측에 다시 정렬 */
-  .menu-popover.standalone-anchor {
-    right: calc(max(0px, (100vw - 480px) / 2) + 20px);
-  }
-  
-  .menu-popover-item {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    padding: 14px 16px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-    text-align: left;
-    letter-spacing: -0.01em;
-    transition: background-color 0.15s ease, color 0.15s ease;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .menu-popover-item:last-child {
-    border-bottom: none;
-  }
-  
-  .menu-popover-item:hover {
-    background: #0000ff;
-    color: #ffffff;
-  }
-  
-  /* 페이지 준비중 상태 (URL이 없을 때 클릭 시) */
-  .menu-popover-item.unavailable {
-    background: #0000ff;
-    color: #ffffff;
-    pointer-events: none;
-  }
-  
-  .menu-popover-item.unavailable .menu-popover-label::after {
-    content: " — 페이지 준비중";
-    font-weight: 600;
-    font-size: 11px;
-    opacity: 0.85;
-    letter-spacing: -0.01em;
-  }
-  
-  .menu-popover-item.unavailable .menu-popover-arrow-icon {
-    display: none;
-  }
-  
-  .menu-popover-label {
-    flex: 1;
-  }
-  
-  .menu-popover-arrow-icon {
-    font-size: 15px;
-    font-weight: 700;
-    opacity: 0.6;
-  }
-  
-  .menu-popover-item:hover .menu-popover-arrow-icon {
-    opacity: 1;
-  }
-  
-  /* Side Menu */
-  .side-menu {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 90;
-    display: none;
-    flex-direction: column;
-    padding: 18px 20px;
-    animation: fadeIn 0.2s;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-  
-  .side-menu.active { display: flex; }
-  
-  .side-menu-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 80px;
-  }
-  
-  .side-menu-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    align-items: flex-end;
-    text-align: right;
-  }
-  
-  .side-menu-item {
-    font-size: 22px;
-    font-weight: 900;
-    font-style: italic;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: inherit;
-    padding: 4px 0;
-    text-transform: uppercase;
-  }
-  
-  .side-menu-item.category {
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  
-  .side-menu-item.category.active {
-    color: var(--text);
-  }
-  
-  .side-menu-divider {
-    height: 1px;
-    background: var(--border);
-    width: 100%;
-    margin: 20px 0;
-  }
 </style>
 </head>
 <body>
 
 <header class="header">
-  <div class="logo">PROMPTS<sup>™</sup></div>
+  <div class="logo">dondools<sup>™</sup></div>
 </header>
 
 <div class="container">
@@ -1126,7 +798,7 @@
 <main class="card-list" id="cardList"></main>
 
 <footer class="footer">
-  © PROMPTS COLLECTION — ALL PROMPTS CRAFTED WITH CARE
+  © DONDOOLS COLLECTION — ALL PROMPTS CRAFTED WITH CARE
 </footer>
 
 </div>
@@ -1178,29 +850,8 @@
     <input type="text" id="floatingSearchInput" placeholder="검색어를 입력하세요.">
     <button class="floating-search-clear" id="floatingSearchClear" aria-label="검색어 지우기" type="button">✕</button>
   </div>
-  <button class="menu-btn-floating" id="menuBtnFloating" aria-label="메뉴">
-    <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-  </button>
   <button class="top-btn" id="topBtn" aria-label="맨 위로">
     <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
-  </button>
-</div>
-
-<!-- 스크롤 안내려갔을 때 표시되는 단독 메뉴 버튼 -->
-<button class="menu-btn-standalone" id="menuBtnStandalone" aria-label="메뉴">
-  <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-</button>
-
-<!-- 메뉴 말풍선 -->
-<div class="menu-popover" id="menuPopover">
-  <div class="menu-popover-arrow"></div>
-  <button class="menu-popover-item" id="menuAbout">
-    <span class="menu-popover-label">페이지 소개</span>
-    <span class="menu-popover-arrow-icon">→</span>
-  </button>
-  <button class="menu-popover-item" id="menuTagSearch">
-    <span class="menu-popover-label">태그로 검색</span>
-    <span class="menu-popover-arrow-icon">→</span>
   </button>
 </div>
 
@@ -1637,10 +1288,8 @@
   function updateFloatingBar() {
     if (window.scrollY > 400) {
       floatingBar.classList.add("visible");
-      menuBtnStandalone.classList.add("hidden");
     } else {
       floatingBar.classList.remove("visible");
-      menuBtnStandalone.classList.remove("hidden");
     }
   }
   
@@ -1648,71 +1297,6 @@
   
   topBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-  
-  // 메뉴 버튼 (말풍선 토글)
-  const menuBtnFloating = document.getElementById("menuBtnFloating");
-  const menuBtnStandalone = document.getElementById("menuBtnStandalone");
-  const menuPopover = document.getElementById("menuPopover");
-  const menuAbout = document.getElementById("menuAbout");
-  const menuTagSearch = document.getElementById("menuTagSearch");
-  
-  function toggleMenu(e) {
-    e.stopPropagation();
-    // 어떤 메뉴 버튼이 눌렸는지에 따라 말풍선 위치 조정
-    if (e.currentTarget === menuBtnStandalone) {
-      // 단독 버튼: 우측 끝(top 버튼 자리)에 위치 → 말풍선도 우측 끝 정렬
-      menuPopover.classList.add("standalone-anchor");
-    } else {
-      // 플로팅 바 내부 메뉴: top 버튼 왼쪽 옆 → 말풍선도 그 위로 정렬
-      menuPopover.classList.remove("standalone-anchor");
-    }
-    menuPopover.classList.toggle("visible");
-  }
-  
-  menuBtnFloating.addEventListener("click", toggleMenu);
-  menuBtnStandalone.addEventListener("click", toggleMenu);
-  
-  // 외부 클릭 시 말풍선 닫기
-  document.addEventListener("click", (e) => {
-    if (!menuPopover.contains(e.target) 
-        && e.target !== menuBtnFloating 
-        && !menuBtnFloating.contains(e.target)
-        && e.target !== menuBtnStandalone
-        && !menuBtnStandalone.contains(e.target)) {
-      menuPopover.classList.remove("visible");
-    }
-  });
-  
-  // 메뉴 항목별 URL 설정 (빈 문자열이면 "페이지 준비중" 표시)
-  const MENU_URLS = {
-    about: "",       // 페이지 소개 URL — 준비되면 입력
-    tagSearch: ""    // 태그로 검색 URL — 준비되면 입력
-  };
-  
-  // URL이 있으면 이동, 없으면 "페이지 준비중" 효과 표시
-  function handleMenuItemClick(itemEl, url) {
-    if (url && url.trim()) {
-      menuPopover.classList.remove("visible");
-      window.location.href = url;
-      return;
-    }
-    
-    // URL 없음 → 파란 배경 + "페이지 준비중" 텍스트 표시
-    itemEl.classList.add("unavailable");
-    setTimeout(() => {
-      itemEl.classList.remove("unavailable");
-    }, 1500);
-  }
-  
-  menuAbout.addEventListener("click", (e) => {
-    e.stopPropagation();
-    handleMenuItemClick(menuAbout, MENU_URLS.about);
-  });
-  
-  menuTagSearch.addEventListener("click", (e) => {
-    e.stopPropagation();
-    handleMenuItemClick(menuTagSearch, MENU_URLS.tagSearch);
   });
   
   floatingSearchInput.addEventListener("input", (e) => {
