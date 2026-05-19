@@ -14,17 +14,35 @@
     --text-light: #b8b8b8;
     --border: #ececec;
     --border-strong: #0a0a0a;
+    --body-bg: #f3f3f3;
+    --prompt-box-bg: #f7f7f7;
+    --btn-secondary-active-bg: #f0f0f0;
+    --toggle-color: #c8c8c8;
+  }
+  
+  body.dark-mode {
+    --bg: #0a0a0a;
+    --text: #f0f0f0;
+    --text-muted: #8a8a8a;
+    --text-light: #5a5a5a;
+    --border: #2a2a2a;
+    --border-strong: #f0f0f0;
+    --body-bg: #050505;
+    --prompt-box-bg: #1a1a1a;
+    --btn-secondary-active-bg: #1f1f1f;
+    --toggle-color: #555555;
   }
   
   body {
     font-family: "Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    background: #f3f3f3;
+    background: var(--body-bg);
     color: var(--text);
     min-height: 100vh;
     line-height: 1.4;
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
   
   .container {
@@ -34,6 +52,7 @@
     min-height: 100vh;
     position: relative;
     box-shadow: 0 0 40px rgba(0,0,0,0.04);
+    transition: background-color 0.2s ease;
   }
   
   /* Header */
@@ -49,6 +68,7 @@
     border-bottom: 1px solid var(--border);
     max-width: 480px;
     margin: 0 auto;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
   
   .logo {
@@ -65,6 +85,29 @@
     vertical-align: super;
     margin-left: 2px;
     letter-spacing: 0;
+  }
+  
+  .theme-toggle {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    font-style: italic;
+    color: var(--toggle-color);
+    padding: 0;
+    line-height: 1;
+    transition: color 0.15s ease;
+  }
+  
+  .theme-toggle:hover {
+    color: #0000ff;
   }
   
   /* Hero / Intro */
@@ -528,8 +571,8 @@
     font-size: 14px;
     font-weight: 900;
     letter-spacing: 0;
-    color: #ffffff;
-    background: #0a0a0a;
+    color: var(--bg);
+    background: var(--text);
     padding: 4px 10px;
     margin-bottom: 12px;
   }
@@ -544,7 +587,7 @@
   }
   
   .prompt-box {
-    background: #f7f7f7;
+    background: var(--prompt-box-bg);
     border: 1px solid var(--border);
     padding: 18px;
     font-size: 13px;
@@ -637,7 +680,7 @@
   }
   
   .btn-secondary:active {
-    background: #f0f0f0;
+    background: var(--btn-secondary-active-bg);
   }
   
   /* Toast */
@@ -690,7 +733,7 @@
   
   .floating-search {
     flex: 1;
-    background: #ffffff;
+    background: var(--bg);
     border: 1px solid var(--text);
     display: flex;
     align-items: center;
@@ -763,8 +806,8 @@
     flex-shrink: 0;
     width: 44px;
     height: 44px;
-    background: #0a0a0a;
-    color: #ffffff;
+    background: var(--text);
+    color: var(--bg);
     border: none;
     border-radius: 0;
     cursor: pointer;
@@ -800,6 +843,7 @@
 
 <header class="header">
   <div class="logo">dondools<sup>™</sup></div>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="테마 전환">dark</button>
 </header>
 
 <div class="container">
@@ -1356,6 +1400,42 @@
       modalOverlay.classList.remove("active");
       document.body.classList.remove("modal-open");
     }
+  });
+  
+  // ===== 테마 토글 (다크/라이트 모드) =====
+  const themeToggle = document.getElementById("themeToggle");
+  
+  function applyTheme(theme) {
+    if (theme === "dark") {
+      document.body.classList.add("dark-mode");
+      themeToggle.textContent = "light";
+    } else {
+      document.body.classList.remove("dark-mode");
+      themeToggle.textContent = "dark";
+    }
+  }
+  
+  function getStoredTheme() {
+    try {
+      return localStorage.getItem("dondools-theme") || "light";
+    } catch (e) {
+      return "light";
+    }
+  }
+  
+  function setStoredTheme(theme) {
+    try {
+      localStorage.setItem("dondools-theme", theme);
+    } catch (e) {}
+  }
+  
+  // 저장된 테마 즉시 적용
+  applyTheme(getStoredTheme());
+  
+  themeToggle.addEventListener("click", () => {
+    const next = document.body.classList.contains("dark-mode") ? "light" : "dark";
+    applyTheme(next);
+    setStoredTheme(next);
   });
   
   (async function init() {
